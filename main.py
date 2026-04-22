@@ -1,8 +1,15 @@
-# main.py
+"""
+Punto de entrada principal de la aplicación Calculadora de Costes.
+Orquesta la ejecución del pipeline y la visualización de resultados.
+"""
 from services.pipeline import PipelineCostes
 from interface.presenter import VisualizadorConsola
 
 def run():
+    """
+    Ejecuta una demostración del flujo completo: procesamiento de texto,
+    cálculo de costes y presentación de comparativas de modelos.
+    """
     # Configuración del Pipeline
     pipeline = PipelineCostes(modelo_ia="gpt-4o-mini")
     ui = VisualizadorConsola()

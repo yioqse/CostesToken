@@ -1,13 +1,18 @@
-# EJEMPLO: Calculadora de costes de API
+"""
+Script heredado (Legacy) para la calculadora de costes de API de OpenAI.
+Utiliza tiktoken para el conteo de tokens y mantiene una estructura monolítica.
+"""
 import os
 from openai import OpenAI
 import tiktoken
 
-
-
 class CalculadoraCostes:
-    """Calcula costes estimados de uso de APIs de IA"""
+    """
+    Calculadora de costes estimados para el uso de diversas APIs de modelos de lenguaje.
     
+    Contiene las tarifas por millón de tokens y lógica de proyección mensual.
+    """
+
     # Precios por millón de tokens (actualizados 2025)
     PRECIOS = {
         "gpt-4o": {"input": 2.50, "output": 10.00},
@@ -19,11 +24,26 @@ class CalculadoraCostes:
     }
     
     def __init__(self, modelo: str = "gpt-4o-mini"):
+        """
+        Configura la calculadora con las tarifas del modelo especificado.
+
+        Args:
+            modelo (str): Nombre del modelo para el cual calcular costes.
+        """
         self.modelo = modelo
         self.precios = self.PRECIOS.get(modelo, {"input": 0.15, "output": 0.60})
     
     def calcular_costes(self, tokens_input: int, tokens_output: int) -> dict:
-        """Calcula el coste de una llamada específica"""
+        """
+        Calcula el desglose de costes para una cantidad específica de tokens.
+
+        Args:
+            tokens_input (int): Tokens enviados en el prompt.
+            tokens_output (int): Tokens generados por el modelo.
+
+        Returns:
+            dict: Diccionario con costes en USD y céntimos.
+        """
         
         coste_input = (tokens_input / 1_000_000) * self.precios["input"]
         coste_output = (tokens_output / 1_000_000) * self.precios["output"]
@@ -41,13 +61,32 @@ class CalculadoraCostes:
         }
     
     def estimar_tokens(self, texto: str) -> int:
-        """Estima tokens de un texto usando tiktoken"""
+        """
+        Utiliza la librería tiktoken para contar tokens según el modelo configurado.
+
+        Args:
+            texto (str): El texto a tokenizar.
+
+        Returns:
+            int: Cantidad de tokens estimada.
+        """
         encoding = tiktoken.encoding_for_model(self.modelo)
         return len(encoding.encode(texto))
     
     def proyectar_uso_mensual(self, llamadas_por_dia: int, tokens_input_por_llamada: int, 
                               tokens_output_por_llamada: int, dias_mes: int = 30) -> dict:
-        """Proyecta costes mensuales basados en uso estimado"""
+        """
+        Realiza una estimación financiera basada en el uso diario proyectado.
+
+        Args:
+            llamadas_por_dia (int): Frecuencia de uso diario.
+            tokens_input_por_llamada (int): Media de tokens de entrada.
+            tokens_output_por_llamada (int): Media de tokens de salida.
+            dias_mes (int): Periodo de tiempo en días. Por defecto 30.
+
+        Returns:
+            dict: Métricas mensuales de uso y coste total.
+        """
         
         llamadas_mensuales = llamadas_por_dia * dias_mes
         tokens_input_mensual = llamadas_mensuales * tokens_input_por_llamada
