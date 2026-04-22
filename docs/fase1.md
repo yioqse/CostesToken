@@ -27,3 +27,11 @@ New-Item -ItemType Directory docs, services, interface; New-Item -Force calculad
 # Instalación de paquetes
 
     - pip install transformers torch
+
+## 4. Arquitectura de Pipeline y Extensibilidad
+Se ha implementado una arquitectura en capas para garantizar que el sistema pueda crecer:
+
+1.  **Capa de Calculadora (Core):** Funciones puras de cálculo y tokenización local. No conocen nada del mundo exterior.
+2.  **Capa de Servicios (`services/`):** Implementa el Pipeline. Orquesta la secuencia lógica. Es extensible: se pueden añadir "pasos" adicionales (ej. validación de seguridad, logs, etc.) sin modificar el núcleo.
+3.  **Capa de Interfaz (`interface/`):** Desacopla la lógica de negocio de la visualización. Permite cambiar la salida (Consola, JSON, CSV) fácilmente.
+4.  **Inyección de Modelos:** El sistema permite cambiar el tokenizador local de Hugging Face simplemente pasando un string diferente al constructor del servicio, permitiendo usar Llama, Mistral o modelos propios.
