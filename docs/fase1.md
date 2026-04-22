@@ -12,9 +12,13 @@ New-Item -ItemType Directory docs, services, interface; New-Item -Force calculad
 - **Limitación:** El código está diseñado para APIs de pago, no para modelos locales.
 
 ## 2. Acciones Realizadas
-1. **Desacoplamiento:** Se ha separado la lógica en tres módulos: `precios.py` (datos), `tokens.py` (conteo local) y `proyecciones.py` (cálculos).
-2. **Migración a Local:** Se ha sustituido `tiktoken` por la librería `transformers` de Hugging Face. Esto permite usar tokenizadores de modelos locales como Llama 3, Mistral o Phi-3.
-3. **Abstracción de Precios:** Se movieron los precios a un diccionario independiente para facilitar actualizaciones sin tocar la lógica de cálculo.
+1. Descomposición de Monolito: El código original de un solo archivo se dividió en 3 módulos lógicos dentro de calculadora/.
+
+2. Sustitución de Dependencias de API: Se eliminó tiktoken (que requiere conexión y es propietario de OpenAI) y se implementó transformers (Hugging Face) en tokens.py para permitir el conteo de tokens en local.
+
+3. Abstracción de Datos: Los precios se movieron a precios.py para permitir actualizaciones de tarifas sin tocar el código de cálculo.
+
+4. Implementación de Punto de Entrada: Se creó main.py utilizando el patrón de diseño de inyección de lógica, facilitando que en el futuro se puedan cambiar los modelos de IA local sin romper el programa.
 
 ## 3. Cambios en la Lógica de Tokenización
 - Antes: Dependía de `tiktoken.encoding_for_model`.
