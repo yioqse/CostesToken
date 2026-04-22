@@ -1,0 +1,2 @@
+# creacion de estructura
+New-Item -ItemType Directory docs, services, interface; New-Item -Force calculadora/proyecciones.py, calculadora/tokens.py, calculadora/precios.py, tests/test_proyecciones.py, tests/test_tokens.py, tests/test_precios.py, .github/workflows/ci.yml
