@@ -35,3 +35,16 @@ Se ha implementado una arquitectura en capas para garantizar que el sistema pued
 2.  **Capa de Servicios (`services/`):** Implementa el Pipeline. Orquesta la secuencia lógica. Es extensible: se pueden añadir "pasos" adicionales (ej. validación de seguridad, logs, etc.) sin modificar el núcleo.
 3.  **Capa de Interfaz (`interface/`):** Desacopla la lógica de negocio de la visualización. Permite cambiar la salida (Consola, JSON, CSV) fácilmente.
 4.  **Inyección de Modelos:** El sistema permite cambiar el tokenizador local de Hugging Face simplemente pasando un string diferente al constructor del servicio, permitiendo usar Llama, Mistral o modelos propios.
+
+## 5. Integración Continua y Calidad (CI/CD)
+- **Automatización:** Se ha configurado `.github/workflows/ci.yml` para validar cada cambio en el código.
+- **Entorno de Test:** El CI instala un entorno de Python ligero y descarga las dependencias necesarias (`transformers`, `torch`) para asegurar que el tokenizador local funciona en servidores remotos.
+- **Pruebas Unitarias:** Se han implementado tests en `/tests` que cubren:
+    1. Integridad del flujo de datos (Pipeline).
+    2. Correcta asignación de precios.
+    3. Gestión de errores ante modelos desconocidos.
+
+## 6. Configuración del Entorno de Ejecución
+- **Problema detectado:** Los módulos de `calculadora` y `services` no eran reconocidos por el sistema de tests debido a la jerarquía de carpetas en Windows.
+- **Solución técnica:** Se configuró la variable de entorno `PYTHONPATH` apuntando a la raíz del proyecto para permitir importaciones absolutas entre paquetes.
+- **Comando de validación:** `$env:PYTHONPATH = "."; pytest`
