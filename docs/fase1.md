@@ -48,3 +48,43 @@ Se ha implementado una arquitectura en capas para garantizar que el sistema pued
 - **Problema detectado:** Los módulos de `calculadora` y `services` no eran reconocidos por el sistema de tests debido a la jerarquía de carpetas en Windows.
 - **Solución técnica:** Se configuró la variable de entorno `PYTHONPATH` apuntando a la raíz del proyecto para permitir importaciones absolutas entre paquetes.
 - **Comando de validación:** `$env:PYTHONPATH = "."; pytest`
+
+## 7. Resultado de la Validación
+- **Fecha:** [Pon la fecha de hoy]
+- **Tests ejecutados:** 3
+- **Resultado:** ✅ 3 passed, 0 failed
+- **Tiempo de ejecución:** 30.21s (incluye descarga inicial del tokenizador gpt2)
+- **Cobertura:** Pipeline, Cálculo de costes, Fallback de modelos
+- **Warning:** Simlinks no soportados en Windows (no afecta funcionalidad)
+
+## 8. Estructura Final del Proyecto
+\`\`\`
+📂 .github/workflows/
+   └── ci.yml
+📂 calculadora/
+   ├── __init__.py
+   ├── precios.py
+   ├── tokens.py
+   └── proyecciones.py
+📂 docs/fase1/
+   └── analisis_inicial.md
+📂 interface/
+   ├── __init__.py
+   └── presenter.py
+📂 services/
+   ├── __init__.py
+   └── pipeline.py
+📂 tests/
+   ├── __init__.py
+   ├── test_pipeline.py
+   └── test_proyecciones.py
+📄 main.py
+\`\`\`
+
+## 9. Comandos de Ejecución
+- **Ejecutar aplicación:** `python main.py`
+- **Ejecutar tests:** `$env:PYTHONPATH = "."; pytest`
+- **Instalar dependencias:** `pip install transformers torch pytest`
+\`\`\`
+
+---

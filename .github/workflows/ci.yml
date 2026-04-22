@@ -1,23 +1,30 @@
-import pytest
-from services.pipeline import PipelineCostes
+name: CI Pipeline Calculadora
 
-def test_pipeline_calculo_correcto():
-    # Inicializamos pipeline con modelo mini (precios conocidos)
-    pipeline = PipelineCostes(modelo_ia="gpt-4o-mini")
-    
-    # Datos de prueba
-    prompt = "Hola" 
-    respuesta = "Mundo" # 2 tokens aprox cada uno
-    
-    resultado = pipeline.procesar_texto(prompt, respuesta)
-    
-    # Validaciones
-    assert "tokens" in resultado
-    assert "economia" in resultado
-    assert resultado["tokens"]["in"] > 0
-    assert resultado["economia"]["total_usd"] > 0
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
 
-def test_modelo_inexistente_fallback():
-    # Si el modelo no existe, debería usar el fallback de gpt-4o-mini
-    pipeline = PipelineCostes(modelo_ia="modelo-inventado")
-    assert pipeline.procesador.precios["input"] == 0.15
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout de código
+      uses: actions/checkout@v4
+
+    - name: Configurar Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.11'
+
+    - name: Instalar dependencias
+      run: |
+        python -m pip install --upgrade pip
+        pip install pytest transformers torch
+
+    - name: Ejecutar Tests
+      run: |
+        export PYTHONPATH=$PYTHONPATH:.
+        pytest tests/
